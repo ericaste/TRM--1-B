@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archivio Segreto: Polo Nord - Caso #2026-NXS | TRM #1-B</title>
+    <!-- Caricamento Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font stile macchina da scrivere e display tecnico -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Share+Tech+Mono&family=Special+Elite&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-night: #070d17;
+            --bg-slate: #0f1929;
+            --ice-cyan: #7dd3fc;
+            --ice-glow: rgba(125, 211, 252, 0.25);
+            --paper-bg: #e6dec8;
+            --paper-dark: #d2c6a8;
+            --ink-color: #1e242b;
+            --stamp-red: #991b1b;
+            --amber-led: #f59e0b;
+        }
+
+        body {
+            background-color: var(--bg-night);
+            color: #e2e8f0;
+            font-family: 'Courier Prime', monospace;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 0%, #162842 0%, #070d17 75%),
+                linear-gradient(rgba(125, 211, 252, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(125, 211, 252, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+        }
+
+        .font-typewriter {
+            font-family: 'Special Elite', 'Courier Prime', monospace;
+        }
+
+        .font-tech {
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        /* Etichetta cartacea sulla cassetta */
+        .cassette-label {
+            background-color: var(--paper-bg);
+            color: var(--ink-color);
+            background-image: 
+                repeating-linear-gradient(transparent, transparent 21px, rgba(30, 58, 138, 0.16) 22px),
+                radial-gradient(rgba(139, 115, 85, 0.14) 1px, transparent 0);
+            background-size: 100% 22px, 16px 16px;
+            box-shadow: inset 0 0 14px rgba(138, 118, 84, 0.35), 0 2px 6px rgba(0,0,0,0.6);
+        }
+
+        /* Timbri inchiostro */
+        .stamp {
+            border: 2px solid var(--stamp-red);
+            color: var(--stamp-red);
+            font-family: 'Special Elite', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            padding: 0.15rem 0.5rem;
+            display: inline-block;
+            transform: rotate(-4deg);
+            opacity: 0.88;
+            mix-blend-mode: multiply;
+            user-select: none;
+        }
+
+        /* Telaio metallico registratore */
+        .tape-deck {
+            background: linear-gradient(145deg, #1b2432, #0d131d);
+            border: 2px solid #2d3b52;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.9),
+                inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animazione bobine magnetiche */
+        @keyframes spinReel {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .reel-spinning {
+            animation: spinReel 3.5s linear infinite;
+        }
+
+        .reel-spinning-fast {
+            animation: spinReel 0.8s linear infinite;
+        }
+
+        /* Pulsanti meccanici registratore */
+        .mech-btn {
+            background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
+            border: 1px solid #475569;
+            border-bottom: 4px solid #0f172a;
+            transition: all 0.08s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+        }
+
+        .mech-btn:active, .mech-btn.active {
+            transform: translateY(3px);
+            border-bottom-width: 1px;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
+        }
+
+        /* Effetto vetro ghiacciato */
+        .frost-panel {
+            background: rgba(15, 25, 41, 0.78);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(125, 211, 252, 0.2);
+        }
+
+        /* Custom range slider per audio */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            background: #0f172a;
+            border-radius: 3px;
+            border: 1px solid #334155;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 12px;
+            border-radius: 2px;
+            background: #7dd3fc;
+            cursor: pointer;
+            margin-top: -6px;
+            box-shadow: 0 0 8px rgba(125, 211, 252, 0.6);
+        }
+    </style>
+</head>
+<body class="min-h-screen relative flex flex-col justify-center selection:bg-sky-400 selection:text-slate-900">
+
+    <!-- Canvas neve sullo sfondo -->
+    <canvas id="snowCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+    <!-- Overlay vignettatura glaciale -->
+    <div class="fixed inset-0 pointer-events-none z-0" style="background: radial-gradient(circle at center, transparent 50%, rgba(2, 6, 15, 0.88) 100%);"></div>
+
+    <!-- Contenitore Principale Centrato -->
+    <div class="relative z-10 w-full max-w-2xl mx-auto px-4 py-6 sm:py-10">
+        
+        <!-- Intestazione Compatta Stazione Artica -->
+        <header class="frost-panel rounded-xl p-4 sm:p-5 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xl">
+            <div>
+                <div class="flex items-center gap-2 text-[11px] font-tech tracking-widest text-sky-400 uppercase mb-0.5">
+                    <span class="inline-block w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                    <span>INTERCETTAZIONE POLARE // LAT. 90°00'00" N</span>
+                </div>
+                <h1 class="text-xl sm:text-2xl font-typewriter text-slate-100 tracking-wide">
+                    ARCHIVIO SEGRETO: POLO NORD
+                </h1>
+                <p class="text-xs text-slate-400 mt-0.5 font-tech tracking-wider">
+                    UNITÀ INTERCETTAZIONI CRIOGENICHE — <span class="text-amber-400 font-bold">CASO #2026-NXS</span>
+                </p>
+            </div>
+            
+            <div class="flex items-center gap-2.5 self-end sm:self-center">
+                <div class="text-right font-tech text-[11px] text-slate-400 bg-slate-950/80 px-2.5 py-1.5 rounded-lg border border-slate-800">
+                    <div>DATA: <span class="text-amber-300 font-bold">22 DIC 2026</span></div>
+                    <div>TEMP: <span class="text-sky-300 font-bold">-47.2 °C</span></div>
+                </div>
+                <div class="border border-red-500/80 text-red-400 font-typewriter text-[11px] px-2.5 py-1.5 rounded uppercase tracking-widest transform -rotate-2 bg-red-950/30">
+                    TOP SECRET
+                </div>
+            </div>
+        </header>
+
+        <!-- Registratore Analogico a Cassetta / Bobine Unico Centrale -->
+        <main>
+            <div class="tape-deck rounded-2xl p-5 sm:p-7 relative overflow-hidden">
+                <!-- Viti metalliche agli angoli -->
+                <div class="absolute top-3 left-3 w-2.5 h-2.5 rounded-full bg-slate-600 border border-slate-800"></div>
+                <div class="absolute top-3 right-3 w-2.5 h-2.5 rounded-full bg-slate-600 border border-slate-800"></div>
+                <div class="absolute bottom-3 left-3 w-2.5 h-2.5 rounded-full bg-slate-600 border border-slate-800"></div>
+                <div class="absolute bottom-3 right-3 w-2.5 h-2.5 rounded-full bg-slate-600 border border-slate-800"></div>
+
+                <!-- Targhetta modello & LED stato -->
+                <div class="flex items-center justify-between border-b border-slate-700/80 pb-3.5 mb-5">
+                    <div>
+                        <span class="font-tech text-xs tracking-widest text-slate-400 block">CRYO-RECORDER MOD. IV // ANALOG DECK</span>
+                        <span class="font-bold text-sm sm:text-base text-sky-300 tracking-wider">STAZIONE ASCOLTO NORD</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800">
+                        <span id="statusLed" class="w-2.5 h-2.5 rounded-full bg-slate-600 transition-colors"></span>
+                        <span id="statusText" class="font-tech text-xs text-slate-400">STANDBY</span>
+                    </div>
+                </div>
+
+                <!-- Vano Cassetta & Bobine Magnetiche -->
+                <div class="bg-slate-950/95 rounded-xl p-4 sm:p-5 border border-slate-800 shadow-inner mb-5 relative">
+                    
+                    <!-- Etichetta Cartacea della Cassetta con i metadati del reperto -->
+                    <div class="cassette-label rounded-md px-3.5 py-2.5 mb-4 border border-amber-900/40 relative">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/30 pb-1.5 mb-1.5">
+                            <span class="font-tech text-xs font-bold tracking-wider text-slate-800 uppercase">
+                                CASO #2026-NXS • 22 DICEMBRE 2026
+                            </span>
+                            <span class="stamp text-[10px] font-bold">
+                                REPERTO VOCALE
+                            </span>
+                        </div>
+                        <div class="font-typewriter text-base sm:text-lg font-bold text-slate-900 leading-tight">
+                            TRM #1-B (Intercettazione Audio)
+                        </div>
+                        <div class="font-typewriter text-xs text-slate-700 mt-1 flex flex-wrap items-center justify-between gap-2">
+                            <span>Soggetto: Elfo non identificato — Frequenza officina Nord</span>
+                            <span class="font-tech text-[11px] text-red-900 font-bold">N° 01 / LATO A</span>
+                        </div>
+                    </div>
+
+                    <!-- Finestra Bobine Magnetiche -->
+                    <div class="flex items-center justify-around py-2 bg-slate-900/70 rounded-lg border border-slate-800/90 px-2">
+                        <!-- Bobina Sinistra -->
+                        <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-slate-700 bg-slate-950 flex items-center justify-center shadow-lg">
+                            <div id="leftReel" class="w-full h-full relative flex items-center justify-center">
+                                <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-[10px] border-amber-950/85"></div>
+                                <svg class="w-16 h-16 text-slate-400 absolute" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="4"/>
+                                    <circle cx="50" cy="50" r="14" fill="#1e293b" stroke="currentColor" stroke-width="4"/>
+                                    <line x1="50" y1="8" x2="50" y2="36" stroke="currentColor" stroke-width="5"/>
+                                    <line x1="14" y1="71" x2="38" y2="57" stroke="currentColor" stroke-width="5"/>
+                                    <line x1="86" y1="71" x2="62" y2="57" stroke="currentColor" stroke-width="5"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Testina magnetica centrale + Indicatore Picco Vocale -->
+                        <div class="flex flex-col items-center justify-center gap-1.5">
+                            <span class="font-tech text-[9px] tracking-widest text-slate-500 uppercase">TESTINA</span>
+                            <div class="w-1.5 h-8 bg-gradient-to-b from-slate-600 to-slate-400 rounded"></div>
+                            <div class="w-10 h-6 bg-slate-800 border border-slate-600 rounded-sm flex items-center justify-center">
+                                <div id="headGlow" class="w-5 h-1.5 bg-slate-600 rounded-full transition-all duration-75"></div>
+                            </div>
+                        </div>
+
+                        <!-- Bobina Destra -->
+                        <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-slate-700 bg-slate-950 flex items-center justify-center shadow-lg">
+                            <div id="rightReel" class="w-full h-full relative flex items-center justify-center">
+                                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-[6px] border-amber-950/85"></div>
+                                <svg class="w-16 h-16 text-slate-400 absolute" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="4"/>
+                                    <circle cx="50" cy="50" r="14" fill="#1e293b" stroke="currentColor" stroke-width="4"/>
+                                    <line x1="50" y1="8" x2="50" y2="36" stroke="currentColor" stroke-width="5"/>
+                                    <line x1="14" y1="71" x2="38" y2="57" stroke="currentColor" stroke-width="5"/>
+                                    <line x1="86" y1="71" x2="62" y2="57" stroke="currentColor" stroke-width="5"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Linea nastro teso -->
+                    <div class="w-3/4 mx-auto h-0.5 bg-amber-800/75 -mt-2.5 mb-1"></div>
+                </div>
+
+                <!-- Display Oscilloscopio / Spettro Vocale & Contatore Nastro -->
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-3.5 mb-5">
+                    <div class="flex items-center justify-between text-xs font-tech mb-2">
+                        <span class="text-sky-400 flex items-center gap-2">
+                            <span>OSCILLOSCOPIO SEGNALE VOCALE</span>
+                            <span id="signalBurstBadge" class="hidden px-1.5 py-0.2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded text-[10px]">
+                                PICCO VOCALE
+                            </span>
+                        </span>
+                        <span id="tapeCounter" class="bg-slate-900 text-amber-400 px-2.5 py-0.5 rounded border border-amber-500/30 tracking-widest">
+                            00:00 / 00:14
+                        </span>
+                    </div>
+                    
+                    <!-- Canvas Waveform Reattivo -->
+                    <canvas id="waveformCanvas" class="w-full h-20 rounded bg-slate-900/90 block border border-slate-800/80"></canvas>
+
+                    <!-- Barra avanzamento nastro -->
+                    <div class="mt-3">
+                        <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                            <div id="progressBar" class="h-full bg-gradient-to-r from-sky-500 via-emerald-400 to-amber-400 w-0 transition-all duration-150"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pulsante Principale Azione -->
+                <button id="mainPlayBtn" onclick="togglePlay()" class="w-full mb-4 py-3.5 px-4 rounded-xl font-tech text-base tracking-wider uppercase font-bold text-slate-950 bg-gradient-to-r from-sky-400 via-emerald-300 to-amber-200 hover:from-sky-300 hover:to-amber-100 shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2.5 transition-all cursor-pointer">
+                    <svg id="mainPlayIcon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/></svg>
+                    <span id="mainPlayLabel">Riproduci Intercettazione TRM #1-B</span>
+                </button>
+
+                <!-- Tasti Meccanici Analogici -->
+                <div class="grid grid-cols-4 gap-2.5 mb-5">
+                    <button onclick="rewindTape()" title="Riavvolgi Nastro" class="mech-btn py-2.5 rounded-lg flex flex-col items-center justify-center text-slate-300 hover:text-sky-300 cursor-pointer">
+                        <svg class="w-5 h-5 mb-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z"/></svg>
+                        <span class="font-tech text-[10px]">RIAVV.</span>
+                    </button>
+
+                    <button id="btnPlay" onclick="startPlayback()" title="Riproduci" class="mech-btn py-2.5 rounded-lg flex flex-col items-center justify-center text-emerald-400 hover:text-emerald-300 cursor-pointer">
+                        <svg class="w-5 h-5 mb-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/></svg>
+                        <span class="font-tech text-[10px]">PLAY</span>
+                    </button>
+
+                    <button id="btnPause" onclick="pausePlayback()" title="Pausa" class="mech-btn py-2.5 rounded-lg flex flex-col items-center justify-center text-amber-400 hover:text-amber-300 cursor-pointer">
+                        <svg class="w-5 h-5 mb-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M5.75 3a.75.75 0 00-.75.75v12.5c0 .414.336.75.75.75h1.5a.75.75 0 00.75-.75V3.75A.75.75 0 007.25 3h-1.5zM12.75 3a.75.75 0 00-.75.75v12.5c0 .414.336.75.75.75h1.5a.75.75 0 00.75-.75V3.75a.75.75 0 00-.75-.75h-1.5z"/></svg>
+                        <span class="font-tech text-[10px]">PAUSA</span>
+                    </button>
+
+                    <button id="btnStop" onclick="stopPlayback()" title="Stop" class="mech-btn py-2.5 rounded-lg flex flex-col items-center justify-center text-red-400 hover:text-red-300 cursor-pointer">
+                        <svg class="w-5 h-5 mb-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M5.25 3A2.25 2.25 0 003 5.25v9.5A2.25 2.25 0 005.25 17h9.5A2.25 2.25 0 0017 14.75v-9.5A2.25 2.25 0 0014.75 3h-9.5z"/></svg>
+                        <span class="font-tech text-[10px]">STOP</span>
+                    </button>
+                </div>
+
+                <!-- Controlli Miscelazione Audio (Vento Artico & Fruscio Nastro) -->
+                <div class="bg-slate-900/85 rounded-xl p-3.5 border border-slate-800 space-y-2.5">
+                    <div class="flex items-center justify-between gap-4">
+                        <label for="windVolume" class="font-tech text-xs text-sky-300 flex items-center gap-1.5 whitespace-nowrap">
+                            <span>❄️ DISTURBO POLARE &amp; NASTRO</span>
+                        </label>
+                        <input id="windVolume" type="range" min="0" max="100" value="55" oninput="updateAmbientVolume(this.value)" class="w-full">
+                        <span id="windVolLabel" class="font-tech text-xs text-slate-400 w-9 text-right">55%</span>
+                    </div>
+
+                    <div class="flex items-center justify-between text-[11px] font-tech text-slate-400 pt-1.5 border-t border-slate-800/80">
+                        <span id="speechSupportBadge" class="flex items-center gap-1.5 text-emerald-400">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            MODULO VOCALE ELFO PRONTO
+                        </span>
+                        <button onclick="testAmbientNoise()" class="text-sky-400 hover:underline cursor-pointer">
+                            [Test Atmosfera]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        /**
+         * ARCHIVIO SEGRETO: POLO NORD - CASO #2026-NXS
+         * Reperto: TRM #1-B (Intercettazione Audio) - 22 Dicembre 2026
+         * Motore Audio Procedurale + Sintesi Vocale Acuta da Elfo del Natale + Oscilloscopio Sincronizzato
+         */
+
+        // --- 1. CONFIGURAZIONE DEL SINGOLO REPERTO AUDIO ---
+        const TAPE_DATA = {
+            id: "TRM #1-B",
+            caseId: "CASO #2026-NXS",
+            date: "22 Dicembre 2026",
+            durationSec: 13,
+            // Sequenza scandita con pause drammatiche tra ogni parola
+            words: [
+                { text: "Delta...", startSec: 0.7, durationSec: 1.15, formantFreq: 680 },
+                { text: "Oscar...", startSec: 2.5, durationSec: 1.15, formantFreq: 620 },
+                { text: "Delta...", startSec: 4.3, durationSec: 1.15, formantFreq: 700 },
+                { text: "India...", startSec: 6.1, durationSec: 1.15, formantFreq: 760 },
+                { text: "Charlie...", startSec: 7.9, durationSec: 1.25, formantFreq: 720 },
+                { text: "India.", startSec: 9.8, durationSec: 1.35, formantFreq: 790 }
+            ]
+        };
+
+        // --- 2. STATO DELL'APPLICAZIONE ---
+        let isPlaying = false;
+        let isPaused = false;
+        let elapsedSeconds = 0;
+        let progressInterval = null;
+        let wordTimeouts = [];
+        let ambientVolume = 0.55;
+        let isAmbientTesting = false;
+        let isElfSpeakingNow = false;
+        let currentWordEnergy = 0;
+
+        // Web Audio API Nodes
+        let audioCtx = null;
+        let masterAmbientGain = null;
+        let windNoiseNode = null;
+        let crackleNode = null;
+        let isAmbientRunning = false;
+
+        // Web Speech API
+        const synth = window.speechSynthesis;
+        let selectedVoice = null;
+        let speechSupported = 'speechSynthesis' in window;
+
+        // --- 3. INIZIALIZZAZIONE ---
+        window.addEventListener('DOMContentLoaded', () => {
+            initSnowCanvas();
+            initWaveformCanvas();
+            loadVoices();
+            if (speechSupported && synth.onvoiceschanged !== undefined) {
+                synth.onvoiceschanged = loadVoices;
+            }
+            updateTimerDisplay();
+        });
+
+        function loadVoices() {
+            if (!speechSupported) {
+                updateSpeechBadge(false);
+                return;
+            }
+            const voices = synth.getVoices();
+            const itVoices = voices.filter(v => v.lang.toLowerCase().includes('it'));
+            if (itVoices.length > 0) {
+                // Preferisci una voce brillante/femminile o chiara da combinare con pitch alto da elfo
+                selectedVoice = itVoices.find(v => 
+                    v.name.toLowerCase().includes('elsa') || 
+                    v.name.toLowerCase().includes('alice') || 
+                    v.name.toLowerCase().includes('federica') ||
+                    v.name.toLowerCase().includes('google')
+                ) || itVoices[0];
+                updateSpeechBadge(true);
+            } else if (voices.length > 0) {
+                selectedVoice = voices[0];
+                updateSpeechBadge(true);
+            }
+        }
+
+        function updateSpeechBadge(supported) {
+            const badge = document.getElementById('speechSupportBadge');
+            if (supported) {
+                badge.className = "flex items-center gap-1.5 text-emerald-400";
+                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> VOCE ELFO IT + FORMANTI ATTIVI`;
+            } else {
+                badge.className = "flex items-center gap-1.5 text-amber-400";
+                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> SINTESI FORMANTI ELFO ATTIVA`;
+            }
+        }
+
+        // --- 4. MOTORE WEB AUDIO API (Vento, Nastro, Bip Radio, Sintesi Formanti Elfo) ---
+        function initAudioContext() {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContextClass();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playMechanicalClick(pitch = 160) {
+            try {
+                initAudioContext();
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(pitch, now);
+                osc.frequency.exponentialRampToValueAtTime(45, now + 0.045);
+
+                gain.gain.setValueAtTime(0.35, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.055);
+            } catch (e) {
+                console.warn("Audio click non disponibile:", e);
+            }
+        }
+
+        function playRadioBeep(isEnd = false) {
+            try {
+                initAudioContext();
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'sine';
+                if (!isEnd) {
+                    osc.frequency.setValueAtTime(1180, now);
+                    osc.frequency.setValueAtTime(1480, now + 0.11);
+                    gain.gain.setValueAtTime(0.14, now);
+                    gain.gain.setValueAtTime(0.01, now + 0.09);
+                    gain.gain.setValueAtTime(0.14, now + 0.11);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.27);
+                } else {
+                    osc.frequency.setValueAtTime(1040, now);
+                    osc.frequency.exponentialRampToValueAtTime(540, now + 0.28);
+                    gain.gain.setValueAtTime(0.14, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.32);
+                }
+            } catch (e) {
+                console.warn("Audio beep non disponibile:", e);
+            }
+        }
+
+        /**
+         * Sintetizzatore Formante Acuto da Elfo di supporto/fallback:
+         * Genera una modulazione sillabica acuta e squillante (460-640 Hz) con filtro vocale
+         * che arricchisce la timbrica da elfo della Web Speech API e garantisce audio anche se il browser blocca SpeechSynthesis.
+         */
+        function playElfFormantBurst(baseFreq = 680, duration = 0.85) {
+            try {
+                initAudioContext();
+                const now = audioCtx.currentTime;
+
+                const carrier = audioCtx.createOscillator();
+                const vibrato = audioCtx.createOscillator();
+                const vibratoGain = audioCtx.createGain();
+                const formantFilter = audioCtx.createBiquadFilter();
+                const envGain = audioCtx.createGain();
+
+                // Frequenza fondamentale acuta da elfo
+                carrier.type = 'sawtooth';
+                const f0 = baseFreq * 0.68;
+                carrier.frequency.setValueAtTime(f0, now);
+                carrier.frequency.linearRampToValueAtTime(f0 * 1.16, now + duration * 0.35);
+                carrier.frequency.linearRampToValueAtTime(f0 * 0.94, now + duration * 0.85);
+
+                // Vibrato giocoso e squillante tipico da elfo
+                vibrato.type = 'sine';
+                vibrato.frequency.setValueAtTime(11, now);
+                vibratoGain.gain.setValueAtTime(22, now);
+                vibrato.connect(vibratoGain);
+                vibratoGain.connect(carrier.frequency);
+
+                // Filtro formante vocale nasale/acuto
+                formantFilter.type = 'bandpass';
+                formantFilter.frequency.setValueAtTime(1650, now);
+                formantFilter.frequency.linearRampToValueAtTime(2150, now + duration * 0.5);
+                formantFilter.Q.setValueAtTime(4.5, now);
+
+                // Inviluppo a due sillabe ("Del-ta", "O-scar", "In-dia", "Char-lie")
+                const volumeLevel = speechSupported ? 0.032 : 0.13;
+                envGain.gain.setValueAtTime(0.0001, now);
+                envGain.gain.linearRampToValueAtTime(volumeLevel, now + 0.06);
+                envGain.gain.linearRampToValueAtTime(volumeLevel * 0.3, now + duration * 0.42);
+                envGain.gain.linearRampToValueAtTime(volumeLevel * 0.95, now + duration * 0.56);
+                envGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+                carrier.connect(formantFilter);
+                formantFilter.connect(envGain);
+                envGain.connect(audioCtx.destination);
+
+                carrier.start(now);
+                vibrato.start(now);
+                carrier.stop(now + duration + 0.02);
+                vibrato.stop(now + duration + 0.02);
+            } catch (e) {
+                console.warn("Sintesi formante non disponibile:", e);
+            }
+        }
+
+        function startAmbientSound() {
+            initAudioContext();
+            if (isAmbientRunning) return;
+
+            const bufferSize = audioCtx.sampleRate * 3;
+            const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+
+            let lastOut = 0.0;
+            for (let i = 0; i < bufferSize; i++) {
+                const white = Math.random() * 2 - 1;
+                output[i] = (lastOut + (0.03 * white)) / 1.03;
+                lastOut = output[i];
+                output[i] *= 2.8;
+                if (Math.random() > 0.9992) {
+                    output[i] += (Math.random() * 0.45 - 0.22);
+                }
+            }
+
+            windNoiseNode = audioCtx.createBufferSource();
+            windNoiseNode.buffer = noiseBuffer;
+            windNoiseNode.loop = true;
+
+            const windFilter = audioCtx.createBiquadFilter();
+            windFilter.type = 'bandpass';
+            windFilter.frequency.value = 340;
+            windFilter.Q.value = 3.2;
+
+            const lfo = audioCtx.createOscillator();
+            const lfoGain = audioCtx.createGain();
+            lfo.frequency.value = 0.18;
+            lfoGain.gain.value = 190;
+            lfo.connect(lfoGain);
+            lfoGain.connect(windFilter.frequency);
+            lfo.start();
+
+            const tapeBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const tapeData = tapeBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                tapeData[i] = (Math.random() * 2 - 1) * 0.06;
+            }
+            crackleNode = audioCtx.createBufferSource();
+            crackleNode.buffer = tapeBuffer;
+            crackleNode.loop = true;
+
+            const tapeFilter = audioCtx.createBiquadFilter();
+            tapeFilter.type = 'highpass';
+            tapeFilter.frequency.value = 2400;
+
+            masterAmbientGain = audioCtx.createGain();
+            masterAmbientGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+            masterAmbientGain.gain.linearRampToValueAtTime(ambientVolume * 0.45, audioCtx.currentTime + 0.5);
+
+            windNoiseNode.connect(windFilter);
+            windFilter.connect(masterAmbientGain);
+
+            crackleNode.connect(tapeFilter);
+            tapeFilter.connect(masterAmbientGain);
+
+            masterAmbientGain.connect(audioCtx.destination);
+
+            windNoiseNode.start();
+            crackleNode.start();
+            isAmbientRunning = true;
+        }
+
+        function stopAmbientSound() {
+            if (!isAmbientRunning) return;
+            try {
+                if (masterAmbientGain && audioCtx) {
+                    masterAmbientGain.gain.linearRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3);
+                }
+                setTimeout(() => {
+                    if (windNoiseNode) { windNoiseNode.stop(); windNoiseNode.disconnect(); }
+                    if (crackleNode) { crackleNode.stop(); crackleNode.disconnect(); }
+                    isAmbientRunning = false;
+                }, 320);
+            } catch (e) {
+                isAmbientRunning = false;
+            }
+        }
+
+        function updateAmbientVolume(val) {
+            ambientVolume = val / 100;
+            document.getElementById('windVolLabel').textContent = `${val}%`;
+            if (masterAmbientGain && audioCtx && isAmbientRunning) {
+                masterAmbientGain.gain.setTargetAtTime(ambientVolume * 0.45, audioCtx.currentTime, 0.1);
+            }
+        }
+
+        function testAmbientNoise() {
+            playMechanicalClick(200);
+            if (!isAmbientRunning) {
+                startAmbientSound();
+                isAmbientTesting = true;
+                setTimeout(() => {
+                    if (!isPlaying && isAmbientTesting) {
+                        stopAmbientSound();
+                        isAmbientTesting = false;
+                    }
+                }, 3500);
+            } else if (!isPlaying) {
+                stopAmbientSound();
+                isAmbientTesting = false;
+            }
+        }
+
+        // --- 5. LOGICA DI RIPRODUZIONE VOCE ELFO DEL NATALE ---
+        function togglePlay() {
+            if (isPlaying && !isPaused) {
+                pausePlayback();
+            } else {
+                startPlayback();
+            }
+        }
+
+        function clearScheduledWords() {
+            wordTimeouts.forEach(id => clearTimeout(id));
+            wordTimeouts = [];
+            isElfSpeakingNow = false;
+            currentWordEnergy = 0;
+            updateSpeechVisualIndicators(false);
+        }
+
+        function speakElfWord(wordObj) {
+            if (!isPlaying || isPaused) return;
+
+            isElfSpeakingNow = true;
+            currentWordEnergy = 1.0;
+            updateSpeechVisualIndicators(true);
+
+            // Attiva formante acuto di supporto/fallback
+            playElfFormantBurst(wordObj.formantFreq, wordObj.durationSec * 0.85);
+
+            // Pronuncia tramite Web Speech API con voce acuta, squillante e vivace da elfo
+            if (speechSupported) {
+                try {
+                    synth.cancel();
+                    const utter = new SpeechSynthesisUtterance(wordObj.text);
+                    utter.lang = 'it-IT';
+                    if (selectedVoice) utter.voice = selectedVoice;
+                    utter.pitch = 1.75; // Voce molto acuta e squillante da Elfo del Natale
+                    utter.rate = 0.94;  // Scandita e vivace
+                    utter.volume = 1.0;
+                    synth.speak(utter);
+                } catch (e) {
+                    console.warn("Errore SpeechSynthesis:", e);
+                }
+            }
+
+            // Spegni picco oscilloscopio al termine della singola parola
+            const endTimer = setTimeout(() => {
+                isElfSpeakingNow = false;
+                currentWordEnergy = 0;
+                updateSpeechVisualIndicators(false);
+            }, wordObj.durationSec * 1000);
+            wordTimeouts.push(endTimer);
+        }
+
+        function scheduleRemainingWords(fromElapsedSec) {
+            clearScheduledWords();
+            TAPE_DATA.words.forEach((w) => {
+                const delayMs = (w.startSec - fromElapsedSec) * 1000;
+                if (delayMs >= -200) {
+                    const tId = setTimeout(() => {
+                        speakElfWord(w);
+                    }, Math.max(20, delayMs));
+                    wordTimeouts.push(tId);
+                }
+            });
+        }
+
+        function startPlayback() {
+            if (isPlaying && !isPaused) return;
+            playMechanicalClick(210);
+            initAudioContext();
+            isAmbientTesting = false;
+            startAmbientSound();
+
+            if (isPaused) {
+                isPaused = false;
+                isPlaying = true;
+                if (masterAmbientGain && audioCtx) {
+                    masterAmbientGain.gain.setTargetAtTime(ambientVolume * 0.45, audioCtx.currentTime, 0.1);
+                }
+                updateDeckVisuals('PLAY');
+                scheduleRemainingWords(elapsedSeconds);
+                startProgressTimer();
+                return;
+            }
+
+            // Avvio da 00:00
+            isPlaying = true;
+            isPaused = false;
+            elapsedSeconds = 0;
+
+            playRadioBeep(false);
+            updateDeckVisuals('PLAY');
+            scheduleRemainingWords(0);
+            startProgressTimer();
+        }
+
+        function startProgressTimer() {
+            clearInterval(progressInterval);
+            progressInterval = setInterval(() => {
+                if (!isPlaying || isPaused) return;
+                elapsedSeconds += 0.1;
+
+                const pct = Math.min(100, (elapsedSeconds / TAPE_DATA.durationSec) * 100);
+                document.getElementById('progressBar').style.width = `${pct}%`;
+                updateTimerDisplay();
+
+                if (elapsedSeconds >= TAPE_DATA.durationSec) {
+                    finishPlayback();
+                }
+            }, 100);
+        }
+
+        function pausePlayback() {
+            if (!isPlaying || isPaused) return;
+            playMechanicalClick(150);
+            isPaused = true;
+            clearInterval(progressInterval);
+            clearScheduledWords();
+            updateDeckVisuals('PAUSE');
+
+            if (speechSupported) {
+                synth.cancel();
+            }
+            if (masterAmbientGain && audioCtx) {
+                masterAmbientGain.gain.setTargetAtTime(0.02, audioCtx.currentTime, 0.1);
+            }
+        }
+
+        function stopPlayback(playClick = true) {
+            if (playClick) playMechanicalClick(130);
+            isPlaying = false;
+            isPaused = false;
+            elapsedSeconds = 0;
+            clearInterval(progressInterval);
+            clearScheduledWords();
+
+            if (speechSupported) {
+                synth.cancel();
+            }
+            stopAmbientSound();
+            updateDeckVisuals('STOP');
+            updateTimerDisplay();
+            document.getElementById('progressBar').style.width = '0%';
+        }
+
+        function finishPlayback() {
+            playRadioBeep(true);
+            isPlaying = false;
+            isPaused = false;
+            clearInterval(progressInterval);
+            clearScheduledWords();
+            document.getElementById('progressBar').style.width = '100%';
+            
+            setTimeout(() => {
+                stopAmbientSound();
+                updateDeckVisuals('STOP');
+            }, 750);
+        }
+
+        function rewindTape() {
+            playMechanicalClick(240);
+            const wasPlaying = isPlaying && !isPaused;
+            stopPlayback(false);
+
+            const leftReel = document.getElementById('leftReel');
+            const rightReel = document.getElementById('rightReel');
+            leftReel.classList.add('reel-spinning-fast');
+            rightReel.classList.add('reel-spinning-fast');
+            updateDeckVisuals('REWIND');
+
+            setTimeout(() => {
+                leftReel.classList.remove('reel-spinning-fast');
+                rightReel.classList.remove('reel-spinning-fast');
+                if (wasPlaying) {
+                    startPlayback();
+                } else {
+                    updateDeckVisuals('STOP');
+                }
+            }, 650);
+        }
+
+        function updateTimerDisplay() {
+            const total = TAPE_DATA.durationSec;
+            const cur = Math.min(total, Math.floor(elapsedSeconds));
+            const fmt = (s) => `00:${s < 10 ? '0' + s : s}`;
+            document.getElementById('tapeCounter').textContent = `${fmt(cur)} / ${fmt(total)}`;
+        }
+
+        function updateSpeechVisualIndicators(active) {
+            const badge = document.getElementById('signalBurstBadge');
+            const headGlow = document.getElementById('headGlow');
+            if (active) {
+                badge.classList.remove('hidden');
+                headGlow.className = "w-6 h-1.5 bg-emerald-400 rounded-full shadow-[0_0_10px_#34d399]";
+            } else {
+                badge.classList.add('hidden');
+                if (isPlaying && !isPaused) {
+                    headGlow.className = "w-5 h-1.5 bg-amber-400 rounded-full shadow-[0_0_6px_#fbbf24]";
+                } else {
+                    headGlow.className = "w-5 h-1.5 bg-slate-600 rounded-full";
+                }
+            }
+        }
+
+        function updateDeckVisuals(state) {
+            const leftReel = document.getElementById('leftReel');
+            const rightReel = document.getElementById('rightReel');
+            const led = document.getElementById('statusLed');
+            const statusText = document.getElementById('statusText');
+            const headGlow = document.getElementById('headGlow');
+            const mainBtnLabel = document.getElementById('mainPlayLabel');
+            const mainBtnIcon = document.getElementById('mainPlayIcon');
+
+            document.querySelectorAll('.mech-btn').forEach(b => b.classList.remove('active'));
+
+            if (state === 'PLAY') {
+                leftReel.classList.add('reel-spinning');
+                rightReel.classList.add('reel-spinning');
+                led.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]";
+                statusText.textContent = "IN RIPRODUZIONE";
+                statusText.className = "font-tech text-xs text-emerald-400";
+                headGlow.className = "w-5 h-1.5 bg-amber-400 rounded-full shadow-[0_0_6px_#fbbf24]";
+                document.getElementById('btnPlay').classList.add('active');
+                mainBtnLabel.textContent = "Metti in Pausa Intercettazione";
+                mainBtnIcon.innerHTML = '<path d="M5.75 3a.75.75 0 00-.75.75v12.5c0 .414.336.75.75.75h1.5a.75.75 0 00.75-.75V3.75A.75.75 0 007.25 3h-1.5zM12.75 3a.75.75 0 00-.75.75v12.5c0 .414.336.75.75.75h1.5a.75.75 0 00.75-.75V3.75a.75.75 0 00-.75-.75h-1.5z"/>';
+            } else if (state === 'PAUSE') {
+                leftReel.classList.remove('reel-spinning');
+                rightReel.classList.remove('reel-spinning');
+                led.className = "w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse";
+                statusText.textContent = "IN PAUSA";
+                statusText.className = "font-tech text-xs text-amber-400";
+                headGlow.className = "w-5 h-1.5 bg-amber-600 rounded-full";
+                document.getElementById('btnPause').classList.add('active');
+                mainBtnLabel.textContent = "Riprendi Intercettazione TRM #1-B";
+                mainBtnIcon.innerHTML = '<path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>';
+            } else if (state === 'REWIND') {
+                led.className = "w-2.5 h-2.5 rounded-full bg-sky-400 animate-ping";
+                statusText.textContent = "RIAVVOLGIMENTO...";
+                statusText.className = "font-tech text-xs text-sky-400";
+            } else {
+                leftReel.classList.remove('reel-spinning');
+                rightReel.classList.remove('reel-spinning');
+                led.className = "w-2.5 h-2.5 rounded-full bg-slate-600";
+                statusText.textContent = "STANDBY";
+                statusText.className = "font-tech text-xs text-slate-400";
+                headGlow.className = "w-5 h-1.5 bg-slate-600 rounded-full";
+                mainBtnLabel.textContent = "Riproduci Intercettazione TRM #1-B";
+                mainBtnIcon.innerHTML = '<path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>';
+            }
+        }
+
+        // --- 6. VISUALIZZATORE ONDE SONORE SINCRONIZZATO CON LE PAROLE DELL'ELFO ---
+        function initWaveformCanvas() {
+            const canvas = document.getElementById('waveformCanvas');
+            const ctx = canvas.getContext('2d');
+
+            function resize() {
+                const rect = canvas.getBoundingClientRect();
+                canvas.width = rect.width * window.devicePixelRatio;
+                canvas.height = rect.height * window.devicePixelRatio;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            let phase = 0;
+            function drawWave() {
+                const w = canvas.width;
+                const h = canvas.height;
+                ctx.clearRect(0, 0, w, h);
+
+                // Griglia oscilloscopio
+                ctx.strokeStyle = 'rgba(125, 211, 252, 0.08)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(0, h / 2);
+                ctx.lineTo(w, h / 2);
+                ctx.stroke();
+
+                const bars = 52;
+                const barWidth = (w / bars) * 0.65;
+                const gap = (w / bars) * 0.35;
+
+                for (let i = 0; i < bars; i++) {
+                    let amplitude = 3;
+
+                    if (isPlaying && !isPaused) {
+                        const envelope = Math.sin((i / bars) * Math.PI);
+                        if (isElfSpeakingNow) {
+                            // Picchi alti e rapidi sincronizzati con ogni parola pronunciata dall'elfo
+                            const wave1 = Math.sin(i * 0.55 + phase * 1.4);
+                            const wave2 = Math.cos(i * 1.15 - phase * 2.1);
+                            amplitude = Math.max(8, Math.abs(wave1 * wave2) * (h * 0.86) * envelope);
+                        } else {
+                            // Brusio di fondo del nastro e vento nelle pause tra una parola e l'altra
+                            const noiseWave = Math.sin(i * 0.35 + phase * 0.6) * Math.cos(i * 0.2 - phase * 0.4);
+                            amplitude = 4 + Math.abs(noiseWave) * (h * 0.16) * envelope;
+                        }
+                    } else if (isAmbientTesting) {
+                        amplitude = 4 + Math.abs(Math.sin(i * 0.3 + phase * 0.5)) * 12;
+                    }
+
+                    const x = i * (barWidth + gap) + gap / 2;
+                    const y = (h - amplitude) / 2;
+
+                    if (isPlaying && !isPaused && isElfSpeakingNow) {
+                        ctx.fillStyle = amplitude > h * 0.48 ? '#fbbf24' : '#34d399';
+                    } else if (isPlaying && !isPaused) {
+                        ctx.fillStyle = '#38bdf8';
+                    } else {
+                        ctx.fillStyle = '#334155';
+                    }
+
+                    ctx.beginPath();
+                    ctx.roundRect(x, y, barWidth, amplitude, 2);
+                    ctx.fill();
+                }
+
+                phase += (isPlaying && !isPaused) ? (isElfSpeakingNow ? 0.32 : 0.12) : 0.05;
+                requestAnimationFrame(drawWave);
+            }
+            drawWave();
+        }
+
+        // --- 7. EFFETTO NEVE ARTICA SULLO SFONDO ---
+        function initSnowCanvas() {
+            const canvas = document.getElementById('snowCanvas');
+            const ctx = canvas.getContext('2d');
+            let width, height, flakes;
+
+            function setup() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+                const count = Math.min(90, Math.floor(width / 16));
+                flakes = Array.from({ length: count }, () => ({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    r: Math.random() * 2.2 + 0.8,
+                    speedY: Math.random() * 0.9 + 0.35,
+                    speedX: Math.random() * 0.6 - 0.2,
+                    opacity: Math.random() * 0.5 + 0.15
+                }));
+            }
+
+            setup();
+            window.addEventListener('resize', setup);
+
+            function animateSnow() {
+                ctx.clearRect(0, 0, width, height);
+                for (let f of flakes) {
+                    ctx.beginPath();
+                    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(224, 242, 254, ${f.opacity})`;
+                    ctx.fill();
+
+                    f.y += f.speedY;
+                    f.x += f.speedX + Math.sin(f.y * 0.01) * 0.25;
+
+                    if (f.y > height) {
+                        f.y = -5;
+                        f.x = Math.random() * width;
+                    }
+                    if (f.x > width) f.x = 0;
+                    if (f.x < 0) f.x = width;
+                }
+                requestAnimationFrame(animateSnow);
+            }
+            animateSnow();
+        }
+    </script>
+</body>
+</html>
